@@ -1,0 +1,78 @@
+// ECOMERCIAL - Visualização de Site (Protótipo Simples)
+
+import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+
+const mockUser = {
+  email: "fornecedor@teste.com",
+  tipo: "fornecedor",
+};
+
+function Login({ setUser }) {
+  return (
+    <div className="flex justify-center items-center h-screen bg-gray-100">
+      <Card className="p-8 w-96 shadow-xl">
+        <CardContent>
+          <h1 className="text-2xl font-bold mb-4 text-center">Portal ECOMERCIAL</h1>
+          <p className="mb-2 text-sm text-gray-600">Selecione o tipo de acesso:</p>
+          <div className="flex flex-col gap-2">
+            <Button onClick={() => setUser({ ...mockUser, tipo: "fornecedor" })} className="w-full">Entrar como Fornecedor</Button>
+            <Button onClick={() => setUser({ ...mockUser, tipo: "comprador" })} className="w-full" variant="outline">Entrar como Comprador</Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function PainelFornecedor() {
+  return (
+    <div className="min-h-screen bg-gray-50 p-6">
+      <h2 className="text-3xl font-bold mb-6">Painel do Fornecedor</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="p-4"><CardContent><strong>Status do Cadastro</strong><p className="text-sm text-gray-500 mt-1">Aprovado</p></CardContent></Card>
+        <Card className="p-4"><CardContent><strong>Enviar Cotação</strong><p className="text-sm text-gray-500 mt-1">Último envio: 01/04</p></CardContent></Card>
+        <Card className="p-4"><CardContent><strong>Verbas Comerciais</strong><p className="text-sm text-gray-500 mt-1">3 campanhas ativas</p></CardContent></Card>
+      </div>
+    </div>
+  );
+}
+
+function PainelComprador() {
+  return (
+    <div className="min-h-screen bg-gray-50 p-6">
+      <h2 className="text-3xl font-bold mb-6">Painel do Comprador</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="p-4"><CardContent><strong>Cotações Recebidas</strong><p className="text-sm text-gray-500 mt-1">12 novos fornecedores</p></CardContent></Card>
+        <Card className="p-4"><CardContent><strong>Comparativo de Preços</strong><p className="text-sm text-gray-500 mt-1">Clique para analisar</p></CardContent></Card>
+        <Card className="p-4"><CardContent><strong>Relatórios</strong><p className="text-sm text-gray-500 mt-1">Exportação disponível</p></CardContent></Card>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [user, setUser] = useState(null);
+
+  return (
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            user ? (
+              user.tipo === "fornecedor" ? <PainelFornecedor /> : <PainelComprador />
+            ) : (
+              <Login setUser={setUser} />
+            )
+          }
+        />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
